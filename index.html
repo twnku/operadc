@@ -99,18 +99,28 @@
                                         <input type="number" id="amount" data-bs-toggle="tooltip" data-bs-placement="top" class="form-control" value="1" style=" box-shadow: none; background:rgba(255,255,255,0.4);">
                                     </div>
                                 </div>
-                                <span onclick="generateLinks()" id="generateResult" class="btn w-100 mt-0" style="background-color: #4267B2; box-shadow: inset 0 -3px 0 0 rgb(34 41 47 / 20%); color: #FFF; -webkit-transition: all .2s ease; transition: all .2s ease; border: 0px solid transparent;" tabindex="4"><i class="fas fa-scroll"></i> &nbsp; Generate</span>
-                                <div class="divider my-0 pt-3">
+                                <span id="generateResult" class="btn w-100 mt-0" style="background-color: #4267B2; box-shadow: inset 0 -3px 0 0 rgb(34 41 47 / 20%); color: #FFF; -webkit-transition: all .2s ease; transition: all .2s ease; border: 0px solid transparent;" tabindex="4"><i class="fas fa-scroll"></i> &nbsp; Generate</span>
+                                <div class="divider my-0 pt-1">
                                     <div class="divider-text">Result</div>
                                 </div>
-                                <div class="d-flex justify-content-between col mt-1 mb-0" tabindex="4">
-                                    <div class="col-12 d-flex justify-content-start">
-                                        <div class="input-group input-group-merge">
-                                            <textarea onclick="$(this).value = $(this).val();autosize.update($(this));autosize($(this));" type="text" rows="3" style="resize: none;" class="form-control" style="border: 0; box-shadow: none; background:rgba(255,255,255,0.1);" id="downlodRes" readonly></textarea>
+                                <div id="resultWrapper" class="d-none">
+                                    <div class="d-flex justify-content-between col mt-1">
+                                        <div class="col-12 d-flex justify-content-start">
+                                            <div class="input-group input-group-merge">
+                                                <input type="text" class="form-control" style="border: 0; box-shadow: none; background:rgba(255,255,255,0.4);" id="url1" value="https://discord.com/" readonly>
+                                                <span class="input-group-text ccopy" style="border: 0; box-shadow: none; background:rgba(255,255,255,0.4);" onclick="$('#url1').select(); document.execCommand('copy');">Copy</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <span id="downloadResult" class="btn w-100 mt-1" style="background-color: #4267B2; box-shadow: inset 0 -3px 0 0 rgb(34 41 47 / 20%); color: #FFF; -webkit-transition: all .2s ease; transition: all .2s ease; border: 0px solid transparent;" tabindex="4"><i class="fas fa-sticky-note"></i> &nbsp; Download Result</span>
+                                <div class="d-flex justify-content-between col mt-2 mb-0" tabindex="4">
+                                    <div class="col-12 d-flex justify-content-start">
+                                        <div class="input-group input-group-merge">
+                                            <textarea onclick="$(this).value = $(this).val();autosize.update($(this));autosize($(this));" type="text" rows="3" style="resize: none;" class="form-control" style="border: 0; box-shadow: none; background:rgba(255,255,255,0.1);" id="copyRes" readonly></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <span onclick="$('#copyRes').select(); document.execCommand('copy');" id="copyResult" class="btn w-100 mt-1" style="background-color: #4267B2; box-shadow: inset 0 -3px 0 0 rgb(34 41 47 / 20%); color: #FFF; -webkit-transition: all .2s ease; transition: all .2s ease; border: 0px solid transparent;" tabindex="4"><i class="fas fa-sticky-note"></i> &nbsp; Copy All Result</span>
                             </div>
                         </div>
                         <!-- Card -->
@@ -165,13 +175,49 @@
                 url: 'https://twnku.software/getdiscord.php',
                 dataType: "json",
                 data: {
-                    "ammount": 1
+                    "ammount": $('#amount').val()
                 },
                 success: function(data) {
                     if (data.status == true) {
-                        $('#downlodRes').html(data.data);
+                        $('#copyRes').html(data.all);
+                        var resultWrapper = $('#resultWrapper');
+                        resultWrapper.empty();
+                        $.each(data.data, function(index, value) {
+                            var uniqueId = 'uniqueId' + index;
+
+                            var inputElement = $('<input>', {
+                                type: 'text',
+                                class: 'form-control',
+                                style: 'border: 0; box-shadow: none; background:rgba(255,255,255,0.4);',
+                                id: uniqueId,
+                                value: value,
+                                readonly: true
+                            });
+
+                            var copyButton = $('<span>', {
+                                class: 'input-group-text ccopy',
+                                style: 'border: 0; box-shadow: none; background:rgba(255,255,255,0.4);',
+                                text: 'Copy',
+                                click: function() {
+                                    inputElement.select();
+                                    document.execCommand('copy');
+                                }
+                            });
+
+                            var wrapperDiv = $('<div>', {
+                                class: 'd-flex justify-content-between col mt-1'
+                            });
+
+                            wrapperDiv.append($('<div>', {
+                                class: 'col-12 d-flex justify-content-start'
+                            }).append($('<div>', {
+                                class: 'input-group input-group-merge'
+                            }).append(inputElement).append(copyButton)));
+
+                            resultWrapper.append(wrapperDiv);
+                        });
                     } else {
-                        $('#downlodRes').html('Error');
+                        $('#copyRes').html('Error');
                     }
                 }
             });
