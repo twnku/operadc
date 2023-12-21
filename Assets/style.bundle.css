@@ -1,0 +1,50 @@
+@charset "UTF-8"; /*!
+ * Bootstrap  v5.3.2 (https://getbootstrap.com/)
+ * Copyright 2011-2023 The Bootstrap Authors
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
+ */
+[data-bs-theme="light"] {
+    --bs-blockui-overlay-bg: rgba(0, 0, 0, 0.05);
+}
+[data-bs-theme="dark"] {
+    --bs-blockui-overlay-bg: rgba(255, 255, 255, 0.05);
+}
+.blockui {
+    position: relative;
+}
+.blockui .blockui-overlay {
+    transition: all 0.3s ease;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--bs-blockui-overlay-bg);
+}
+.blockui .blockui-overlay .spinner-border {
+    height: 1.35rem;
+    width: 1.35rem;
+}
+.blockui .blockui-message {
+    display: flex;
+    align-items: center;
+    border-radius: 0.475rem;
+    box-shadow: var(--bs-blockui-message-box-shadow);
+    background-color: var(--bs-blockui-message-bg);
+    color: var(--bs-gray-700);
+    font-weight: 600;
+    margin: 0 !important;
+    width: auto;
+    padding: 0.85rem 1.75rem !important;
+}
+.blockui .blockui-message .spinner-border {
+    margin-right: 0.65rem;
+}
+[data-bs-theme="dark"] .blockui {
+    --bs-blockui-overlay-bg: rgba(255, 255, 255, 0.05);
+    --bs-blockui-message-bg: #26272f;
+    --bs-blockui-message-box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.15);
+}
