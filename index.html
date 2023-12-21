@@ -181,6 +181,7 @@
                     if (data.status == true) {
                         $('#copyRes').html(data.all);
                         var resultWrapper = $('#resultWrapper');
+                        resultWrapper.removeClass('d-none');
                         resultWrapper.empty();
                         $.each(data.data, function(index, value) {
                             var uniqueId = 'uniqueId' + index;
