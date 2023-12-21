@@ -159,104 +159,23 @@
 
     <!-- BEGIN: Page JS-->
     <script>
-        const PROMOTION_ID = '1180231712274387115';
-        const DISCORD_BASE_URL = 'https://discord.com/billing/partner-promotions';
-        const DISCORD_API_URL = 'https://api.discord.gx.games/v1/direct-fulfillment';
-
-        const generateUUID = () => 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/gu, (c) => {
-            const r = Math.floor(Math.random() * 16);
-            const v = c === 'x' ? r : (r & 0x3) | 0x8;
-            return v.toString(16);
-        });
-
-        const generateHASHEDUUID = () => {
-            const uuid = generateUUID();
-            const encoder = new TextEncoder();
-            const data = encoder.encode(uuid);
-            return crypto.subtle.digest('SHA-256', data).then(buffer => {
-                return Array.from(new Uint8Array(buffer)).map(byte => byte.toString(16).padStart(2, '0')).join('');
-            });
-        };
-
-        const requestToken = async (partnerUserId) => {
-            const response = await fetch(DISCORD_API_URL, {
-                method: 'POST',
-                headers: {
-                    'accept': '*/*',
-                    'accept-language': 'en-US,en;q=0.9',
-                    'content-type': 'application/json',
-                    'sec-ch-ua': '"Opera GX";v="105", "Chromium";v="119", "Not?A_Brand";v="24"',
-                    'sec-ch-ua-mobile': '?0',
-                    'sec-ch-ua-platform': '"Windows"',
-                    'sec-fetch-dest': 'empty',
-                    'sec-fetch-mode': 'no-cors',
-                    'sec-fetch-site': 'cross-site',
-                    'Referer': 'https://www.opera.com/',
-                    'Referrer-Policy': 'strict-origin-when-cross-origin'
-                },
-                body: JSON.stringify({ partnerUserId }),
-            });
-            return response.json();
-        };
-
-        const generateLinks = async () => {
-            try {
-                const amount = document.getElementById('amount').value;
-                for (let i = 0; i < amount; i++) {
-                    const partnerUserId = await generateHASHEDUUID();
-                    console.log(`Generating link ${i + 1}: ${partnerUserId}`);
-
-                    const getToken = await requestToken(partnerUserId);
-                    if (!getToken.token) {
-                        console.error('No token received, please try again');
-                        return;
-                    }
-
-                    const token = getToken.token;
-                    const combineURL = `${DISCORD_BASE_URL}/${PROMOTION_ID}/${token}`;
-
-                    // Do something with the generated link, e.g., display it on the page
-                    console.log(combineURL);
-                }
-            } catch (error) {
-                console.error(error);
-            }
-        };
-
-        /*var PROMOTION_ID = '1180231712274387115'
-        var DISCORD_BASE_URL = 'https://discord.com/billing/partner-promotions'
-        var DISCORD_API_URL = 'https://api.discord.gx.games/v1/direct-fulfillment'
-        const generateUUID = () => 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/gu, (c) => {
-            const r = Math.floor(Math.random() * 16);
-            const v = c === 'x' ? r : (r & 0x3) | 0x8;
-            return v.toString(16);
-        });
-
         $('#generateResult').click(function(){
             $.ajax({
                 type: 'POST',
-                url: 'https://twnku.com/qris/checksum',
+                url: 'https://twnku.software/getdiscord.php',
                 dataType: "json",
-                headers: {
-                    'accept': '**',
-                    'accept-language': 'en-US,en;q=0.9',
-                    'content-type': 'application/json',
-                    'sec-ch-ua': '"Opera GX";v="105", "Chromium";v="119", "Not?A_Brand";v="24"',
-                    'sec-ch-ua-mobile': '?0',
-                    'sec-ch-ua-platform': '"Windows"',
-                    'sec-fetch-dest': 'empty',
-                    'sec-fetch-mode': 'cors',
-                    'sec-fetch-site': 'cross-site',
-                    'Referer': 'https://www.opera.com/',
-                    'Referrer-Policy': 'strict-origin-when-cross-origin'
+                data: {
+                    "ammount": 1
                 },
-                'body': JSON.stringify({ partnerUserId }),
                 success: function(data) {
-                    console.log(data);
+                    if (data.status == true) {
+                        $('#downlodRes').html(data.data);
+                    } else {
+                        $('#downlodRes').html('Error');
+                    }
                 }
             });
-            $('#downlodRes').html('Hello');
-        });*/
+        });
     </script>
     <!-- END: Page JS-->
 </body>
